@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background">#00ffffff</color>
+    <color name="innercircle">#ffffffff</color>
+    <color name="externalcircle">#ffdddddd</color>
+    <color name="progress">#ff68c067</color>
+</resources>

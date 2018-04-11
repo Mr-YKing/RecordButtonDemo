@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RecordButton">
+        <attr name="recordTime" format="float"/>
+        <attr name="minRecordTime" format="float"/>
+        <attr name="touchDelay" format="float"/>
+    </declare-styleable>
+</resources>
