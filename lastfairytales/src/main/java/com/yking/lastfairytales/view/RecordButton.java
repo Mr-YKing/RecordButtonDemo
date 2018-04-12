@@ -258,8 +258,6 @@ public class RecordButton extends View implements View.OnTouchListener {
         if (null != mLongClickRunnable) {
             mHandler.removeCallbacks(mLongClickRunnable);
         }
-        //重置参数
-        reSetParameters();
         //记录按下时间
         mTouchDown = System.currentTimeMillis();
         //完成置为false
@@ -278,6 +276,7 @@ public class RecordButton extends View implements View.OnTouchListener {
         isDone = true;
         //清除动画效果
         clearAnimation();
+
         long mTouchTime = System.currentTimeMillis() - mTouchDown;
 
         //如果时间小于touch_delay就是点击事件
@@ -292,8 +291,7 @@ public class RecordButton extends View implements View.OnTouchListener {
      */
     private void onActionEndAction() {
         long mTouchTime = System.currentTimeMillis() - mTouchDown;
-        //重置参数，防止在开始动画过程中结束触摸而造成的动画错误
-        reSetParameters();
+
         //执行结束动画效果
         startEndCircleAnimation();
         //如果触摸事件小于RECORD_SHORT_TIME就是录制过短
@@ -320,6 +318,8 @@ public class RecordButton extends View implements View.OnTouchListener {
      * 开启开始动画
      */
     private void startBeginCircleAnimation() {
+        //每次缩放动画之前重置参数，防止出现ui错误
+        reSetParameters();
         //这里是内圈圆半径获取和赋值
         ValueAnimator animator = ValueAnimator.ofInt(mInnerCircleRadius, (int) (mInnerCircleRadius * SCALE_NUM));
         animator.setInterpolator(new LinearInterpolator());
@@ -327,6 +327,10 @@ public class RecordButton extends View implements View.OnTouchListener {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 mInnerCircleRadius = (int) valueAnimator.getAnimatedValue();
+                if (isDone) {
+                    //如果在开始动画执行的过程中停止触摸动作，及时取消动画
+                    valueAnimator.cancel();
+                }
                 //更新ui
                 postInvalidate();
             }
@@ -338,6 +342,10 @@ public class RecordButton extends View implements View.OnTouchListener {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 mExternalCircleRadius = (int) valueAnimator.getAnimatedValue();
+                if (isDone) {
+                    //如果在开始动画执行的过程中停止触摸动作，及时取消动画
+                    valueAnimator.cancel();
+                }
             }
         });
         AnimatorSet set = new AnimatorSet();
@@ -349,6 +357,9 @@ public class RecordButton extends View implements View.OnTouchListener {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
+                if (isDone) {
+                    return;
+                }
                 //开始进度条动画
                 startProgressAnimation();
                 //同时调用长按点击事件
@@ -395,6 +406,8 @@ public class RecordButton extends View implements View.OnTouchListener {
      * 开启结束动画
      */
     private void startEndCircleAnimation() {
+        //每次缩放动画之前重置参数，防止出现ui错误
+        reSetParameters();
         //这里是内圈圆半径获取和赋值
         ValueAnimator animator = ValueAnimator.ofInt((int) (mInnerCircleRadius * SCALE_NUM), mInnerCircleRadius);
         animator.setInterpolator(new LinearInterpolator());
@@ -402,6 +415,10 @@ public class RecordButton extends View implements View.OnTouchListener {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 mInnerCircleRadius = (int) valueAnimator.getAnimatedValue();
+                if (!isDone) {
+                    //如果在结束动画播放过程中再次点击，及时停止动画
+                    valueAnimator.cancel();
+                }
                 //更新ui
                 postInvalidate();
             }
@@ -413,6 +430,10 @@ public class RecordButton extends View implements View.OnTouchListener {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 mExternalCircleRadius = (int) valueAnimator.getAnimatedValue();
+                if (!isDone) {
+                    //如果在结束动画播放过程中再次点击，及时停止动画
+                    valueAnimator.cancel();
+                }
             }
         });
         AnimatorSet set = new AnimatorSet();
@@ -424,7 +445,6 @@ public class RecordButton extends View implements View.OnTouchListener {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                clearAnimation();
                 postInvalidate();
             }
         });
