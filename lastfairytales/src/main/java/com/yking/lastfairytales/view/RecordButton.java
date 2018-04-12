@@ -52,7 +52,7 @@ public class RecordButton extends View implements View.OnTouchListener {
 
         /**
          * 长按事件结束
-         * @param result 返回值状态码 0：正常录制    1：录制时间过短
+         * @param result 返回值状态码 0：正常录制   1：录制时间过短
          */
         void onLongClickFinish(int result);
 
@@ -78,7 +78,7 @@ public class RecordButton extends View implements View.OnTouchListener {
     /**
      * 录制过短时间
      */
-    private static final long MIN_RECORD_TIME_DEFAULT = TOUCH_DELAY_DEFAULT + 500;
+    private static final long MIN_RECORD_TIME_DEFAULT = TOUCH_DELAY_DEFAULT+DURING_TIME + 500;
     private long mMinRecordTime = MIN_RECORD_TIME_DEFAULT;
 
     /**
@@ -166,8 +166,8 @@ public class RecordButton extends View implements View.OnTouchListener {
     private void init(Context context, AttributeSet attrs) {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RecordButton);
         mRecordTime = (long) a.getFloat(R.styleable.RecordButton_recordTime, RECORD_TIME_DEFAULT);
-        mMinRecordTime = (long) a.getFloat(R.styleable.RecordButton_minRecordTime, MIN_RECORD_TIME_DEFAULT);
         mTouchDelay = (long) a.getFloat(R.styleable.RecordButton_touchDelay, MIN_RECORD_TIME_DEFAULT);
+        mMinRecordTime = (long) a.getFloat(R.styleable.RecordButton_minRecordTime, MIN_RECORD_TIME_DEFAULT)+mTouchDelay+DURING_TIME;
         a.recycle();
 
         //初始化内部圆的画笔
@@ -463,6 +463,6 @@ public class RecordButton extends View implements View.OnTouchListener {
      * @param minRecordTime 录制过短时间（毫秒）
      */
     public void setMinRecordTime(long minRecordTime) {
-        this.mMinRecordTime = minRecordTime;
+        this.mMinRecordTime = minRecordTime+mTouchDelay+DURING_TIME;
     }
 }

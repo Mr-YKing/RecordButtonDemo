@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         //设置触摸延迟时间，区分点击还是长按，单位是毫秒
         mRecordButton.setTouchDelay(300);
         //设置最大录制时间，单位为毫秒
-        mRecordButton.setRecordTime(30000);
+        mRecordButton.setRecordTime(5000);
         //设置最小录制时间，单位为毫秒
         mRecordButton.setMinRecordTime(1000);
     }
