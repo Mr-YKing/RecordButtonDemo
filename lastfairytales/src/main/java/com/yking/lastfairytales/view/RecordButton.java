@@ -292,6 +292,8 @@ public class RecordButton extends View implements View.OnTouchListener {
     private void onActionEndAction() {
         long mTouchTime = System.currentTimeMillis() - mTouchDown;
 
+        //完成开关置为true
+        isDone = true;
         //执行结束动画效果
         startEndCircleAnimation();
         //如果触摸事件小于RECORD_SHORT_TIME就是录制过短
